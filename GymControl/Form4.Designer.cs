@@ -32,10 +32,19 @@
             pictureBox1 = new PictureBox();
             label1 = new Label();
             pictureBox2 = new PictureBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            Registrar = new Button();
+            dataGridView1 = new DataGridView();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
+            Column3 = new DataGridViewTextBoxColumn();
+            Column4 = new DataGridViewTextBoxColumn();
+            Column5 = new DataGridViewTextBoxColumn();
+            Column6 = new DataGridViewTextBoxColumn();
+            Column7 = new DataGridViewTextBoxColumn();
+            Column8 = new DataGridViewTextBoxColumn();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -43,7 +52,7 @@
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(4, 6);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(793, 438);
+            pictureBox1.Size = new Size(829, 438);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
@@ -69,51 +78,98 @@
             pictureBox2.TabIndex = 5;
             pictureBox2.TabStop = false;
             // 
-            // tableLayoutPanel1
+            // dataGridView1
             // 
-            tableLayoutPanel1.ColumnCount = 8;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 103F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 95F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 94F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 89F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 72F));
-            tableLayoutPanel1.Location = new Point(31, 121);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
-            tableLayoutPanel1.Size = new Size(734, 163);
-            tableLayoutPanel1.TabIndex = 6;
-            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8 });
+            dataGridView1.Location = new Point(-23, 109);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 51;
+            dataGridView1.Size = new Size(844, 188);
+            dataGridView1.TabIndex = 14;
             // 
-            // Registrar
+            // Column1
             // 
-            Registrar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Registrar.Location = new Point(653, 364);
-            Registrar.Name = "Registrar";
-            Registrar.Size = new Size(112, 49);
-            Registrar.TabIndex = 13;
-            Registrar.Text = "Registrar";
-            Registrar.UseVisualStyleBackColor = true;
+            Column1.HeaderText = "ID";
+            Column1.MinimumWidth = 6;
+            Column1.Name = "Column1";
+            Column1.Width = 50;
+            // 
+            // Column2
+            // 
+            Column2.HeaderText = "Nombre";
+            Column2.MinimumWidth = 6;
+            Column2.Name = "Column2";
+            Column2.Width = 125;
+            // 
+            // Column3
+            // 
+            Column3.HeaderText = "Apellido";
+            Column3.MinimumWidth = 6;
+            Column3.Name = "Column3";
+            Column3.Width = 125;
+            // 
+            // Column4
+            // 
+            Column4.HeaderText = "Telefono";
+            Column4.MinimumWidth = 6;
+            Column4.Name = "Column4";
+            Column4.Width = 90;
+            // 
+            // Column5
+            // 
+            Column5.HeaderText = "Tipo de membresia";
+            Column5.MinimumWidth = 6;
+            Column5.Name = "Column5";
+            Column5.Width = 110;
+            // 
+            // Column6
+            // 
+            Column6.HeaderText = "Estado";
+            Column6.MinimumWidth = 6;
+            Column6.Name = "Column6";
+            Column6.Width = 90;
+            // 
+            // Column7
+            // 
+            Column7.HeaderText = "Fecha de inicio";
+            Column7.MinimumWidth = 6;
+            Column7.Name = "Column7";
+            Column7.Width = 80;
+            // 
+            // Column8
+            // 
+            Column8.HeaderText = "Fecha de vencimiento";
+            Column8.MinimumWidth = 6;
+            Column8.Name = "Column8";
+            Column8.Width = 125;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(632, 369);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 15;
+            button1.Text = "Regresar";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form4
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(Registrar);
-            Controls.Add(tableLayoutPanel1);
+            ClientSize = new Size(833, 450);
+            Controls.Add(button1);
+            Controls.Add(dataGridView1);
             Controls.Add(pictureBox2);
             Controls.Add(label1);
             Controls.Add(pictureBox1);
             Name = "Form4";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form4";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -123,7 +179,15 @@
         private PictureBox pictureBox1;
         private Label label1;
         private PictureBox pictureBox2;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Button Registrar;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn Column1;
+        private DataGridViewTextBoxColumn Column2;
+        private DataGridViewTextBoxColumn Column3;
+        private DataGridViewTextBoxColumn Column4;
+        private DataGridViewTextBoxColumn Column5;
+        private DataGridViewTextBoxColumn Column6;
+        private DataGridViewTextBoxColumn Column7;
+        private DataGridViewTextBoxColumn Column8;
+        private Button button1;
     }
 }

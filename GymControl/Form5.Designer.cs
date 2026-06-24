@@ -139,6 +139,7 @@
             button1.TabIndex = 15;
             button1.Text = "Regresar";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form5
             // 
@@ -156,7 +157,9 @@
             Controls.Add(label1);
             Controls.Add(pictureBox1);
             Name = "Form5";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form5";
+            Load += Form5_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

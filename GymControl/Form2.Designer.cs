@@ -69,6 +69,7 @@
             button1.Text = "Agregar socio";
             button1.TextAlign = ContentAlignment.TopLeft;
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
@@ -81,6 +82,7 @@
             button2.Text = "Administracion de socios";
             button2.TextAlign = ContentAlignment.TopLeft;
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
@@ -93,6 +95,7 @@
             button3.Text = "Reportes";
             button3.TextAlign = ContentAlignment.TopLeft;
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button4
             // 
@@ -103,6 +106,7 @@
             button4.TabIndex = 6;
             button4.Text = "Cerrar sesion";
             button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // Form2
             // 
@@ -118,7 +122,9 @@
             Font = new Font("Imprint MT Shadow", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Margin = new Padding(5, 4, 5, 4);
             Name = "Form2";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form2";
+            Load += Form2_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

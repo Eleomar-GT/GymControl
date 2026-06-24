@@ -19,5 +19,22 @@ namespace GymControl
         {
 
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void Registrar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form2 form2 = new Form2();
+            form2.ShowDialog();
+        }
     }
 }

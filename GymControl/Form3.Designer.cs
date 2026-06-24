@@ -39,7 +39,8 @@
             textBox2 = new TextBox();
             textBox3 = new TextBox();
             textBox4 = new TextBox();
-            Registrar = new Button();
+            button1 = new Button();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -140,22 +141,34 @@
             textBox4.Size = new Size(155, 27);
             textBox4.TabIndex = 11;
             // 
-            // Registrar
+            // button1
             // 
-            Registrar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Registrar.Location = new Point(318, 355);
-            Registrar.Name = "Registrar";
-            Registrar.Size = new Size(126, 49);
-            Registrar.TabIndex = 12;
-            Registrar.Text = "Registrar";
-            Registrar.UseVisualStyleBackColor = true;
+            button1.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.Location = new Point(294, 348);
+            button1.Name = "button1";
+            button1.Size = new Size(126, 49);
+            button1.TabIndex = 13;
+            button1.Text = "Registrar";
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            button2.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button2.Location = new Point(460, 348);
+            button2.Name = "button2";
+            button2.Size = new Size(126, 49);
+            button2.TabIndex = 14;
+            button2.Text = "Regresar";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(Registrar);
+            Controls.Add(button2);
+            Controls.Add(button1);
             Controls.Add(textBox4);
             Controls.Add(textBox3);
             Controls.Add(textBox2);
@@ -167,6 +180,7 @@
             Controls.Add(label1);
             Controls.Add(pictureBox1);
             Name = "Form3";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form3";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
@@ -185,6 +199,7 @@
         private TextBox textBox2;
         private TextBox textBox3;
         private TextBox textBox4;
-        private Button Registrar;
+        private Button button1;
+        private Button button2;
     }
 }
