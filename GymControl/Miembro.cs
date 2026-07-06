@@ -60,6 +60,18 @@ namespace GymControl
             FechaVencimiento = DateTime.Now.AddDays(dias);
             ValidarEstatus();
         }
+        // Método para escribir los datos de los miembros en un archivo de reporte
+        public void EscribirSociosEnArchivo(StreamWriter writer)
+        {
+            foreach (var m in listaMiembros)
+            {
+                m.ValidarEstatus();
+                string estatus = m.StatusActivo ? "ACTIVO" : "VENCIDO";
+                string nombreCompleto = $"{m.Nombre} {m.Apellido}";
+
+                writer.WriteLine(string.Format("{0,-8} {1,-25} {2,-15} {3,-12}", m.IdMiembro, nombreCompleto, m.Membresia, estatus));
+            }
+        }
     }
 }
 
