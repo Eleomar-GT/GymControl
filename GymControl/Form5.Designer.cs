@@ -99,6 +99,7 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "Semanal", "Mensual", "Semestral", "Anual" });
             comboBox1.Location = new Point(405, 151);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(151, 28);
@@ -115,10 +116,12 @@
             // comboBox3
             // 
             comboBox3.FormattingEnabled = true;
+            comboBox3.Items.AddRange(new object[] { "Si", "No" });
             comboBox3.Location = new Point(347, 265);
             comboBox3.Name = "comboBox3";
             comboBox3.Size = new Size(151, 28);
             comboBox3.TabIndex = 11;
+            comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
             // 
             // Registrar
             // 
@@ -129,6 +132,7 @@
             Registrar.TabIndex = 14;
             Registrar.Text = "Generar reporte";
             Registrar.UseVisualStyleBackColor = true;
+            Registrar.Click += Registrar_Click_1;
             // 
             // button1
             // 

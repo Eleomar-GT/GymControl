@@ -146,9 +146,10 @@
             // 
             // button1
             // 
+            button1.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button1.Location = new Point(632, 369);
             button1.Name = "button1";
-            button1.Size = new Size(94, 29);
+            button1.Size = new Size(123, 39);
             button1.TabIndex = 15;
             button1.Text = "Regresar";
             button1.UseVisualStyleBackColor = true;

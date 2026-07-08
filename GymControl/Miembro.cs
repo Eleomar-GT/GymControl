@@ -6,72 +6,51 @@ namespace GymControl
 {
     internal class Miembro
     {
-        // Propiedades de la clase Miembro
-        public string IdMiembro { get; set; }
+        public int IdSocio { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Telefono { get; set; }
-        public string Membresia { get; set; } 
-        public DateTime FechaRegistro { get; set; }
-        public DateTime FechaVencimiento { get; private set; }
-        public bool StatusActivo { get; private set; }
+        public string Email { get; set; }
+        public DateTime FechaInscripcion { get; set; }
+        public DateTime FechaVencimiento { get; set; }
+        public string TipoMembresia { get; set; } 
+        public bool Activo { get; set; }
 
-        //asignar valores a las propiedades de la clase Miembro
-        public Miembro(string idMiembro, string nombre, string apellido, string telefono, string membresia, int diasMembresiaInicial)
+        public Miembro() { }
+
+        // Constructor para registrar un socio nuevo (calcula fechas automáticamente)
+        public Miembro(string nombre, string apellido, string telefono, string email, string tipoMembresia)
         {
-            IdMiembro = idMiembro;
             Nombre = nombre;
-            Apellido = apellido; 
+            Apellido = apellido;
             Telefono = telefono;
-            Membresia = membresia;
-            FechaRegistro = DateTime.Now;
+            Email = email;
+            TipoMembresia = tipoMembresia;
+            FechaInscripcion = DateTime.Now;
+            FechaVencimiento = CalcularVencimiento(tipoMembresia, FechaInscripcion);
+            Activo = true;
+        }
 
-            AsignarNuevosDias(diasMembresiaInicial);
-        } 
-        // Método para validar el estado de la membresía
-        public void ValidarEstatus()
+        public static DateTime CalcularVencimiento(string tipoMembresia, DateTime desde)
         {
-            if (DateTime.Now.Date > FechaVencimiento.Date)
+            switch (tipoMembresia)
             {
-                StatusActivo = false;
-            }
-            else
-            {
-                StatusActivo = true;
+                case "Mensual":
+                    return desde.AddMonths(1);
+                case "Trimestral":
+                    return desde.AddMonths(3);
+                case "Anual":
+                    return desde.AddYears(1);
+                default:
+                    return desde.AddMonths(1);
             }
         }
-        // Método para renovar la membresía
-        public void RenovarMembresia(int diasComprados)
-        {
-            if (StatusActivo)
-            {
-                FechaVencimiento = FechaVencimiento.AddDays(diasComprados);
-            }
-            else
-            {
-                FechaVencimiento = DateTime.Now.AddDays(diasComprados);
-            }
 
-            ValidarEstatus();
-        } 
-        // Método privado para asignar nuevos días a la membresía
-        private void AsignarNuevosDias(int dias)
+        public override string ToString()
         {
-            FechaVencimiento = DateTime.Now.AddDays(dias);
-            ValidarEstatus();
+            return $"{IdSocio} - {Nombre} {Apellido} - {TipoMembresia} - Vence: {FechaVencimiento:dd/MM/yyyy}";
         }
-        // Método para escribir los datos de los miembros en un archivo de reporte
-        public void EscribirSociosEnArchivo(StreamWriter writer)
-        {
-            foreach (var m in listaMiembros)
-            {
-                m.ValidarEstatus();
-                string estatus = m.StatusActivo ? "ACTIVO" : "VENCIDO";
-                string nombreCompleto = $"{m.Nombre} {m.Apellido}";
 
-                writer.WriteLine(string.Format("{0,-8} {1,-25} {2,-15} {3,-12}", m.IdMiembro, nombreCompleto, m.Membresia, estatus));
-            }
-        }
     }
 }
 
