@@ -160,7 +160,7 @@
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Semanal", "Mensual", "Anual" });
-            comboBox1.Location = new Point(203, 295);
+            comboBox1.Location = new Point(203, 293);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(155, 28);
             comboBox1.TabIndex = 15;

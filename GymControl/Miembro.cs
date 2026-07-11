@@ -1,44 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GymControl
 {
     internal class Miembro
     {
+        // 1. Propiedades exactas a la Base de Datos
         public int IdSocio { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public string Telefono { get; set; }
-        public string Email { get; set; }
+        public string Telefono { get; set; } // Qué bueno que lo pusiste string aquí, ya machea con el VARCHAR de la BD
+        public string TipoMembresia { get; set; }
+        public string Estado { get; set; } // Cambiado de bool a string ("Activo")
         public DateTime FechaInscripcion { get; set; }
         public DateTime FechaVencimiento { get; set; }
-        public string TipoMembresia { get; set; } 
-        public bool Activo { get; set; }
 
         public Miembro() { }
 
-        // Constructor para registrar un socio nuevo (calcula fechas automáticamente)
-        public Miembro(string nombre, string apellido, string telefono, string email, string tipoMembresia)
+        // 2. Constructor adaptado
+        public Miembro(string nombre, string apellido, string telefono, string tipoMembresia)
         {
             Nombre = nombre;
             Apellido = apellido;
             Telefono = telefono;
-            Email = email;
             TipoMembresia = tipoMembresia;
             FechaInscripcion = DateTime.Now;
             FechaVencimiento = CalcularVencimiento(tipoMembresia, FechaInscripcion);
-            Activo = true;
+            Estado = "Activo"; // Estado inicial por defecto
         }
 
+        // 3. Tus plazos actualizados igual que en CClientes
         public static DateTime CalcularVencimiento(string tipoMembresia, DateTime desde)
         {
             switch (tipoMembresia)
             {
+                case "Semanal":
+                    return desde.AddDays(7);
                 case "Mensual":
                     return desde.AddMonths(1);
-                case "Trimestral":
-                    return desde.AddMonths(3);
                 case "Anual":
                     return desde.AddYears(1);
                 default:
@@ -48,9 +46,7 @@ namespace GymControl
 
         public override string ToString()
         {
-            return $"{IdSocio} - {Nombre} {Apellido} - {TipoMembresia} - Vence: {FechaVencimiento:dd/MM/yyyy}";
+            return $"{IdSocio} - {Nombre} {Apellido} - {TipoMembresia} - Estado: {Estado} - Vence: {FechaVencimiento:dd/MM/yyyy}";
         }
-
     }
 }
-
