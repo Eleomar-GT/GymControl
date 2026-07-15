@@ -35,12 +35,12 @@
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
+            txtNombre = new TextBox();
+            txtApellido = new TextBox();
+            txtTelefono = new TextBox();
             button1 = new Button();
             button2 = new Button();
-            comboBox1 = new ComboBox();
+            cmbMembresia = new ComboBox();
             button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -110,29 +110,29 @@
             label5.TabIndex = 7;
             label5.Text = "Membresia";
             // 
-            // textBox1
+            // txtNombre
             // 
-            textBox1.BackColor = Color.Silver;
-            textBox1.Location = new Point(203, 112);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(155, 27);
-            textBox1.TabIndex = 8;
+            txtNombre.BackColor = Color.Silver;
+            txtNombre.Location = new Point(203, 112);
+            txtNombre.Name = "txtNombre";
+            txtNombre.Size = new Size(155, 27);
+            txtNombre.TabIndex = 8;
             // 
-            // textBox2
+            // txtApellido
             // 
-            textBox2.BackColor = Color.Silver;
-            textBox2.Location = new Point(203, 174);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(155, 27);
-            textBox2.TabIndex = 9;
+            txtApellido.BackColor = Color.Silver;
+            txtApellido.Location = new Point(203, 174);
+            txtApellido.Name = "txtApellido";
+            txtApellido.Size = new Size(155, 27);
+            txtApellido.TabIndex = 9;
             // 
-            // textBox3
+            // txtTelefono
             // 
-            textBox3.BackColor = Color.Silver;
-            textBox3.Location = new Point(203, 234);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(155, 27);
-            textBox3.TabIndex = 10;
+            txtTelefono.BackColor = Color.Silver;
+            txtTelefono.Location = new Point(203, 234);
+            txtTelefono.Name = "txtTelefono";
+            txtTelefono.Size = new Size(155, 27);
+            txtTelefono.TabIndex = 10;
             // 
             // button1
             // 
@@ -156,14 +156,15 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // comboBox1
+            // cmbMembresia
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Semanal", "Mensual", "Anual" });
-            comboBox1.Location = new Point(203, 293);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(155, 28);
-            comboBox1.TabIndex = 15;
+            cmbMembresia.FormattingEnabled = true;
+            cmbMembresia.Items.AddRange(new object[] { "Semanal", "Mensual", "Anual" });
+            cmbMembresia.Location = new Point(203, 293);
+            cmbMembresia.Name = "cmbMembresia";
+            cmbMembresia.Size = new Size(155, 28);
+            cmbMembresia.TabIndex = 15;
+            cmbMembresia.SelectedIndexChanged += comboBox1_SelectedIndexChanged_1;
             // 
             // button3
             // 
@@ -182,12 +183,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(button3);
-            Controls.Add(comboBox1);
+            Controls.Add(cmbMembresia);
             Controls.Add(button2);
             Controls.Add(button1);
-            Controls.Add(textBox3);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(txtTelefono);
+            Controls.Add(txtApellido);
+            Controls.Add(txtNombre);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -197,6 +198,7 @@
             Name = "Form3";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form3";
+            Load += Form3_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -210,12 +212,12 @@
         private Label label3;
         private Label label4;
         private Label label5;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private TextBox textBox3;
+        private TextBox txtNombre;
+        private TextBox txtApellido;
+        private TextBox txtTelefono;
         private Button button1;
         private Button button2;
-        private ComboBox comboBox1;
+        private ComboBox cmbMembresia;
         private Button button3;
     }
 }

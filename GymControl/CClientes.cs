@@ -14,8 +14,21 @@ namespace GymControl
             Conexion objetoConexion = new Conexion();
             try
             {
-                // Consulta SQL para obtener los datos de la tabla Clientes
-                string query = "SELECT ID, Nombre, Apellido, Telefono, [Tipo de membresia], Estado, [Fecha de inicio], [Fecha de vencimiento] FROM Clientes;";
+                // Consulta SQL con INNER JOIN para traer los datos de las 3 tablas unidas
+                string query = @"
+                    SELECT 
+                        c.ID_Cliente AS ID, 
+                        c.Nombre, 
+                        c.Apellido, 
+                        c.Telefono, 
+                        m.Tipo_Membresia AS [Tipo de membresia], 
+                        p.Estado, 
+                        p.Fecha_Inicio AS [Fecha de inicio], 
+                        p.Fecha_Vencimiento AS [Fecha de vencimiento]
+                    FROM Clientes c
+                    INNER JOIN Pagos p ON c.ID_Cliente = p.ID_Cliente
+                    INNER JOIN Membresias m ON p.ID_Membresia = m.ID_Membresia;";
+
                 using (SqlConnection conexionAbierta = objetoConexion.estableceConexion())
                 {
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conexionAbierta);
@@ -37,6 +50,7 @@ namespace GymControl
         // Método definitivo para registrar socios
         public void guardarCliente(TextBox txtNombre, TextBox txtApellido, TextBox txtTelefono, ComboBox cbMembresia)
         {
+            // Validar que todos los campos estén llenos
             if (string.IsNullOrEmpty(txtNombre.Text) || string.IsNullOrEmpty(txtApellido.Text) || string.IsNullOrEmpty(txtTelefono.Text) || cbMembresia.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor, llena todos los campos.");
@@ -75,11 +89,13 @@ namespace GymControl
                         comando.Parameters.AddWithValue("@f_inicio", fechaInicio.Date);
                         comando.Parameters.AddWithValue("@f_vencimiento", fechaVencimiento.Date);
 
+                        // Ejecutar el comando SQL para insertar los datos en la base de datos
                         comando.ExecuteNonQuery();
                         MessageBox.Show("Socio registrado con éxito.");
                     }
                 }
             }
+            //mensage de error en caso de que falle el registro
             catch (Exception ex)
             {
                 MessageBox.Show("Error al registrar socio: " + ex.Message);

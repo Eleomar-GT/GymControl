@@ -26,17 +26,17 @@ namespace conexionBD.Clases
         // Se crea método establece Conexion
         public SqlConnection estableceConexion()
         {
-            try
-            {
-                // Se asigna la cadena de conexión al objeto SqlConnection
-                conex.ConnectionString = cadenaConexion;
-                conex.Open();
-                MessageBox.Show("Conexión realizada a la BD");
-            }
+           try
+           {
+                 //se asigna la cadena de conexión al objeto SqlConnection
+                 conex.ConnectionString = cadenaConexion;
+                 conex.Open();
+                
+           }
             catch (Exception ex)
-            {
+           {
                 MessageBox.Show("No hay conexión a la BD: " + ex.Message); // .Message es más limpio que .ToString() para el usuario
-            }
+           }
             return conex;
         }
 

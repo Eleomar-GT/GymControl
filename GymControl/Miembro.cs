@@ -4,19 +4,19 @@ namespace GymControl
 {
     internal class Miembro
     {
-        // 1. Propiedades exactas a la Base de Datos
+        // Propiedades exactas a la Base de Datos
         public int IdSocio { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public string Telefono { get; set; } // Qué bueno que lo pusiste string aquí, ya machea con el VARCHAR de la BD
+        public string Telefono { get; set; }
         public string TipoMembresia { get; set; }
-        public string Estado { get; set; } // Cambiado de bool a string ("Activo")
+        public string Estado { get; set; } 
         public DateTime FechaInscripcion { get; set; }
         public DateTime FechaVencimiento { get; set; }
 
         public Miembro() { }
 
-        // 2. Constructor adaptado
+        //Constructor adaptado
         public Miembro(string nombre, string apellido, string telefono, string tipoMembresia)
         {
             Nombre = nombre;
@@ -28,7 +28,7 @@ namespace GymControl
             Estado = "Activo"; // Estado inicial por defecto
         }
 
-        // 3. Tus plazos actualizados igual que en CClientes
+        //Tus plazos actualizados igual que en CClientes
         public static DateTime CalcularVencimiento(string tipoMembresia, DateTime desde)
         {
             switch (tipoMembresia)
@@ -43,7 +43,7 @@ namespace GymControl
                     return desde.AddMonths(1);
             }
         }
-
+        // Método para actualizar el estado del socio según la fecha de vencimiento
         public override string ToString()
         {
             return $"{IdSocio} - {Nombre} {Apellido} - {TipoMembresia} - Estado: {Estado} - Vence: {FechaVencimiento:dd/MM/yyyy}";
