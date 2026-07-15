@@ -9,16 +9,33 @@ namespace GymControl
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //
-            this.Hide();
-            Form2 form2 = new Form2();
-            form2.ShowDialog();
+            if (textBox1.Text == "Admin" && textBox2.Text == "12345")
+            {
+                MessageBox.Show("Bienvenido al sistema de control de gimnasio.", "Inicio de sesión exitoso");
+                textBox1.Clear();
+                textBox2.Clear();
+
+
+                this.Hide();
+                using (Form2 form2 = new Form2())
+                {
+                    form2.ShowDialog();
+                }
+                this.Show();
+            }
+            else
+            {
+                MessageBox.Show("Usuario o contraseña incorrectos. Inténtalo de nuevo.", "Error de inicio de sesión");
+                textBox1.Clear();
+                textBox2.Clear();
+
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             // Cerrar el formulario actual y salir de la aplicación
-            this.Close();
+            Application.Exit();
         }
     }
 }
