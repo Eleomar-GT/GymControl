@@ -22,23 +22,15 @@ namespace conexionBD.Clases
 
         // Cadena de conexión corregida
         string cadenaConexion = "Data Source=" + servidor + ";Initial Catalog=" + bd + ";Integrated Security=True;TrustServerCertificate=True;";
+        string conexion = "Data Source=(local)\\SQLEXPRESS;Initial Catalog=clientes_GC;Integrated Security=True;TrustServerCertificate=True;";
 
         // Se crea método establece Conexion
         public SqlConnection estableceConexion()
         {
-           try
-           {
-                 //se asigna la cadena de conexión al objeto SqlConnection
-                 conex.ConnectionString = cadenaConexion;
-                 conex.Open();
-                
-           }
-            catch (Exception ex)
-           {
-                MessageBox.Show("No hay conexión a la BD: " + ex.Message); // .Message es más limpio que .ToString() para el usuario
-           }
+      string cadenaCorrecta = "Data Source=(local)\\SQLEXPRESS;Initial Catalog=clientes_GC;Integrated Security=True;TrustServerCertificate=True;";
+            SqlConnection conex = new SqlConnection(cadenaCorrecta);
             return conex;
-        }
+      }
 
         // Se crea método cerrarConexion
         public void cerrarConexion()

@@ -30,7 +30,7 @@
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TipoMembresia">
-          <DataField>TipoPase</DataField>
+          <DataField>TipoMembresia</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

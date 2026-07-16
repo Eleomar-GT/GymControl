@@ -37,6 +37,11 @@ namespace GymControl
             // Cerrar el formulario actual y salir de la aplicación
             Application.Exit();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
