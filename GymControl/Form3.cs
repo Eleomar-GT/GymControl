@@ -31,12 +31,22 @@ namespace GymControl
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // --- VALIDACIÓN DE SEGURIDAD CORREGIDA ---
+            // --- VALIDACIÓN DE SEGURIDAD (ComboBox) ---
             // Validamos que el ComboBox tenga texto seleccionado y que no sea el índice vacío (-1)
             if (cmbMembresia.SelectedIndex == -1 || string.IsNullOrEmpty(cmbMembresia.Text))
             {
                 MessageBox.Show("Por favor, selecciona un tipo de membresía de la lista.");
                 return;
+            }
+
+            // --- VALIDACIÓN DE SEGURIDAD (Campos de Texto Vacíos) ---
+            // Evita que se registren cadenas vacías ("") o puros espacios en blanco
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtApellido.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefono.Text))
+            {
+                MessageBox.Show("Por favor, rellena todos los campos obligatorios.");
+                return; // Detiene la ejecución por completo
             }
 
             // Obtenemos de forma segura el ID de la membresía y su texto
@@ -56,13 +66,40 @@ namespace GymControl
                 else idMembresia = 1;                                           // ID correspondiente a Mensual
             }
 
-            // 1. Consulta para insertar el cliente y OBTENER su ID autogenerado al instante
-            string queryCliente = @"INSERT INTO Clientes (Nombre, Apellido, Telefono) 
-                            VALUES (@Nombre, @Apellido, @Telefono);
-                            SELECT SCOPE_IDENTITY();"; // Esto nos devuelve el ID recién creado
+            // --- PASO DE CÁLCULO PREVIO DE PRECIOS Y FECHAS ---
+            // Datos listos ANTES de insertar el cliente para cumplir con el NOT NULL de la BD
+            decimal montoCalculado = 350.00m; // Precio mensual por defecto
+            DateTime fechaInicio = DateTime.Today;
+            DateTime fechaVencimiento = DateTime.Today;
+            string estadoInicial = "Activo";
+
+            if (tipoMembresiaTexto.Contains("anual"))
+            {
+                montoCalculado = 3200.00m; // Precio anual
+                fechaVencimiento = fechaInicio.AddYears(1);
+            }
+            else if (tipoMembresiaTexto.Contains("semestral"))
+            {
+                montoCalculado = 1800.00m; // Precio semestral
+                fechaVencimiento = fechaInicio.AddMonths(6);
+            }
+            else if (tipoMembresiaTexto.Contains("semanal"))
+            {
+                montoCalculado = 100.00m; // Costo del plan semanal
+                fechaVencimiento = fechaInicio.AddDays(7); // Suma 7 días exactos
+            }
+            else
+            {
+                fechaVencimiento = fechaInicio.AddMonths(1);
+            }
+
+            // 1. Consulta para insertar el cliente incluyendo campos NOT NULL y OBTENER su ID al instante
+            string queryCliente = @"INSERT INTO Clientes (Nombre, Apellido, Telefono, [Tipo de membresia], Estado, [Fecha de inicio], [Fecha de vencimiento]) 
+                            VALUES (@Nombre, @Apellido, @Telefono, @Membresia, @Estado, @FechaInicio, @FechaVencimiento);
+                            SELECT SCOPE_IDENTITY();";
 
             // 2. Consulta para registrar el pago
-            string queryPago = @"INSERT INTO Pagos (ID_Cliente, ID_Membresia, Monto_Pagado, Fecha_Pago, Fecha_Inicio, Fecha_Vencimiento, Estado) 
+            string queryPago = @"INSERT INTO Pagos (ID_Cliente, ID_Membresia, Monto_Pagado, Fecha_Pago, Fecha_Inicio, Fecha_Vencimiento, Estado)                  
                          VALUES (@ID_Cliente, @ID_Membresia, @Monto, @FechaPago, @FechaInicio, @FechaVencimiento, @Estado);";
 
             using (SqlConnection conexion = new SqlConnection(conexionString))
@@ -71,38 +108,22 @@ namespace GymControl
                 {
                     conexion.Open();
 
-                    // --- PASO 1: REGISTRAR AL CLIENTE ---
+                    // --- PASO 1: REGISTRAR AL CLIENTE (CON TODOS LOS CAMPOS OBLIGATORIOS) ---
                     int nuevoIdCliente = 0;
                     using (SqlCommand cmdCliente = new SqlCommand(queryCliente, conexion))
                     {
                         cmdCliente.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
                         cmdCliente.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
                         cmdCliente.Parameters.AddWithValue("@Telefono", txtTelefono.Text.Trim());
+                        cmdCliente.Parameters.AddWithValue("@Membresia", cmbMembresia.Text.Trim());
+                        cmdCliente.Parameters.AddWithValue("@Estado", estadoInicial);
+                        cmdCliente.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                        cmdCliente.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
 
                         nuevoIdCliente = Convert.ToInt32(cmdCliente.ExecuteScalar());
                     }
 
-                    // --- PASO 2: CALCULAR PRECIO Y FECHAS SEGÚN EL TEXTO ---
-                    decimal montoCalculado = 350.00m; // Precio mensual por defecto
-                    DateTime fechaInicio = DateTime.Today;
-                    DateTime fechaVencimiento = DateTime.Today;
-
-                    if (tipoMembresiaTexto.Contains("anual"))
-                    {
-                        montoCalculado = 3200.00m; // Precio anual
-                        fechaVencimiento = fechaInicio.AddYears(1);
-                    }
-                    else if (tipoMembresiaTexto.Contains("semestral"))
-                    {
-                        montoCalculado = 1800.00m; // Precio semestral
-                        fechaVencimiento = fechaInicio.AddMonths(6);
-                    }
-                    else
-                    {
-                        fechaVencimiento = fechaInicio.AddMonths(1);
-                    }
-
-                    // --- PASO 3: REGISTRAR EL PAGO EN LA TABLA PAGOS ---
+                    // --- PASO 2: REGISTRAR EL PAGO EN LA TABLA PAGOS ---
                     using (SqlCommand cmdPago = new SqlCommand(queryPago, conexion))
                     {
                         cmdPago.Parameters.AddWithValue("@ID_Cliente", nuevoIdCliente);
@@ -111,7 +132,7 @@ namespace GymControl
                         cmdPago.Parameters.AddWithValue("@FechaPago", DateTime.Now);
                         cmdPago.Parameters.AddWithValue("@FechaInicio", fechaInicio);
                         cmdPago.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
-                        cmdPago.Parameters.AddWithValue("@Estado", "Activo");
+                        cmdPago.Parameters.AddWithValue("@Estado", estadoInicial);
 
                         cmdPago.ExecuteNonQuery(); // Guardamos el pago en la BD
                     }
@@ -130,6 +151,7 @@ namespace GymControl
                 }
             }
         }
+        
 
         private void button3_Click(object sender, EventArgs e)
         {
