@@ -35,6 +35,8 @@
             dgvclientes = new DataGridView();
             button1 = new Button();
             button2 = new Button();
+            btnEditar = new Button();
+            btnEliminar = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvclientes).BeginInit();
@@ -64,7 +66,7 @@
             // pictureBox2
             // 
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(506, 12);
+            pictureBox2.Location = new Point(597, 6);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(152, 80);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -79,6 +81,7 @@
             dgvclientes.RowHeadersWidth = 51;
             dgvclientes.Size = new Size(809, 231);
             dgvclientes.TabIndex = 14;
+            dgvclientes.CellMouseClick += dgvclientes_CellMouseClick;
             // 
             // button1
             // 
@@ -94,7 +97,7 @@
             // button2
             // 
             button2.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.Location = new Point(484, 366);
+            button2.Location = new Point(503, 366);
             button2.Name = "button2";
             button2.Size = new Size(123, 39);
             button2.TabIndex = 16;
@@ -102,11 +105,35 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // btnEditar
+            // 
+            btnEditar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEditar.Location = new Point(58, 366);
+            btnEditar.Name = "btnEditar";
+            btnEditar.Size = new Size(113, 39);
+            btnEditar.TabIndex = 17;
+            btnEditar.Text = "Editar";
+            btnEditar.UseVisualStyleBackColor = true;
+            btnEditar.Click += btnEditar_Click;
+            // 
+            // btnEliminar
+            // 
+            btnEliminar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEliminar.Location = new Point(211, 366);
+            btnEliminar.Name = "btnEliminar";
+            btnEliminar.Size = new Size(113, 39);
+            btnEliminar.TabIndex = 18;
+            btnEliminar.Text = "Eliminar";
+            btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.Click += btnEliminar_Click;
+            // 
             // Form4
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(833, 450);
+            Controls.Add(btnEliminar);
+            Controls.Add(btnEditar);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(dgvclientes);
@@ -131,5 +158,7 @@
         private DataGridView dgvclientes;
         private Button button1;
         private Button button2;
+        private Button btnEditar;
+        private Button btnEliminar;
     }
 }

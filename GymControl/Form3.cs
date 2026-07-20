@@ -14,11 +14,34 @@ namespace GymControl
 {
     public partial class Form3 : Form
     {
+        // Variable global para saber si estamos editando (Debe ir DENTRO de la clase)
+        private int? idClienteAEditar = null;
+
         // Tu cadena de conexión unificada apuntando a la base de datos 'Prueba'
         private readonly string conexionString = "Server=.\\SQLEXPRESS; Database=clientes_GC; Integrated Security=True;";
+
+        // CONSTRUCTOR 1: Para cuando es un registro NUEVO
         public Form3()
         {
             InitializeComponent();
+        }
+
+        // CONSTRUCTOR 2: Para cuando es una EDICIÓN desde Form4
+        public Form3(string id, string nombre, string apellido, string telefono, string membresia)
+        {
+            InitializeComponent();
+
+            // Guardamos el ID del cliente
+            idClienteAEditar = Convert.ToInt32(id);
+
+            // Cargamos los datos actuales en los componentes
+            txtNombre.Text = nombre;
+            txtApellido.Text = apellido;
+            txtTelefono.Text = telefono;
+            cmbMembresia.Text = membresia;
+
+            // Cambiamos el texto del botón para que sea intuitivo
+            button1.Text = "Actualizar";
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -32,7 +55,6 @@ namespace GymControl
         private void button1_Click(object sender, EventArgs e)
         {
             // --- VALIDACIÓN DE SEGURIDAD (ComboBox) ---
-            // Validamos que el ComboBox tenga texto seleccionado y que no sea el índice vacío (-1)
             if (cmbMembresia.SelectedIndex == -1 || string.IsNullOrEmpty(cmbMembresia.Text))
             {
                 MessageBox.Show("Por favor, selecciona un tipo de membresía de la lista.");
@@ -40,67 +62,75 @@ namespace GymControl
             }
 
             // --- VALIDACIÓN DE SEGURIDAD (Campos de Texto Vacíos) ---
-            // Evita que se registren cadenas vacías ("") o puros espacios en blanco
             if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
                 string.IsNullOrWhiteSpace(txtApellido.Text) ||
                 string.IsNullOrWhiteSpace(txtTelefono.Text))
             {
                 MessageBox.Show("Por favor, rellena todos los campos obligatorios.");
-                return; // Detiene la ejecución por completo
+                return;
             }
 
-            // Obtenemos de forma segura el ID de la membresía y su texto
-            int idMembresia = 1; // Valor por defecto (Mensual)
+            // --- PASO DE CÁLCULO PREVIO DE PRECIOS Y FECHAS (Para inserción de nuevos) ---
+            int idMembresia = 1;
             string tipoMembresiaTexto = cmbMembresia.Text.ToLower();
 
-            // Si logramos obtener el SelectedValue lo usamos, si no, lo calculamos por el texto seleccionado
             if (cmbMembresia.SelectedValue != null && int.TryParse(cmbMembresia.SelectedValue.ToString(), out int idResultado))
             {
                 idMembresia = idResultado;
             }
             else
             {
-                // Si por alguna razón de enlace da null, le asignamos el ID según el plan seleccionado en pantalla
-                if (tipoMembresiaTexto.Contains("anual")) idMembresia = 3;      // ID correspondiente a Anual en tu BD
-                else if (tipoMembresiaTexto.Contains("semestral")) idMembresia = 2; // ID correspondiente a Semestral
-                else idMembresia = 1;                                           // ID correspondiente a Mensual
+                if (tipoMembresiaTexto.Contains("anual")) idMembresia = 3;
+                else if (tipoMembresiaTexto.Contains("semestral")) idMembresia = 2;
+                else idMembresia = 1;
             }
 
-            // --- PASO DE CÁLCULO PREVIO DE PRECIOS Y FECHAS ---
-            // Datos listos ANTES de insertar el cliente para cumplir con el NOT NULL de la BD
-            decimal montoCalculado = 350.00m; // Precio mensual por defecto
+            decimal montoCalculado = 350.00m;
             DateTime fechaInicio = DateTime.Today;
             DateTime fechaVencimiento = DateTime.Today;
             string estadoInicial = "Activo";
 
             if (tipoMembresiaTexto.Contains("anual"))
             {
-                montoCalculado = 3200.00m; // Precio anual
+                montoCalculado = 3200.00m;
                 fechaVencimiento = fechaInicio.AddYears(1);
             }
             else if (tipoMembresiaTexto.Contains("semestral"))
             {
-                montoCalculado = 1800.00m; // Precio semestral
+                montoCalculado = 1800.00m;
                 fechaVencimiento = fechaInicio.AddMonths(6);
             }
             else if (tipoMembresiaTexto.Contains("semanal"))
             {
-                montoCalculado = 100.00m; // Costo del plan semanal
-                fechaVencimiento = fechaInicio.AddDays(7); // Suma 7 días exactos
+                montoCalculado = 100.00m;
+                fechaVencimiento = fechaInicio.AddDays(7);
             }
             else
             {
                 fechaVencimiento = fechaInicio.AddMonths(1);
             }
 
-            // 1. Consulta para insertar el cliente incluyendo campos NOT NULL y OBTENER su ID al instante
-            string queryCliente = @"INSERT INTO Clientes (Nombre, Apellido, Telefono, [Tipo de membresia], Estado, [Fecha de inicio], [Fecha de vencimiento]) 
-                            VALUES (@Nombre, @Apellido, @Telefono, @Membresia, @Estado, @FechaInicio, @FechaVencimiento);
-                            SELECT SCOPE_IDENTITY();";
+            // Cambiamos las strings de las consultas según sea Nuevo o Edición
+            string queryCliente = "";
 
-            // 2. Consulta para registrar el pago
-            string queryPago = @"INSERT INTO Pagos (ID_Cliente, ID_Membresia, Monto_Pagado, Fecha_Pago, Fecha_Inicio, Fecha_Vencimiento, Estado)                  
-                         VALUES (@ID_Cliente, @ID_Membresia, @Monto, @FechaPago, @FechaInicio, @FechaVencimiento, @Estado);";
+            if (idClienteAEditar == null)
+            {
+                // ES UN REGISTRO NUEVO
+                queryCliente = @"INSERT INTO Clientes (Nombre, Apellido, Telefono, [Tipo de membresia], Estado, [Fecha de inicio], [Fecha de vencimiento]) 
+                        VALUES (@Nombre, @Apellido, @Telefono, @Membresia, @Estado, @FechaInicio, @FechaVencimiento);
+                        SELECT SCOPE_IDENTITY();";
+            }
+            else
+            {
+                // ES UNA EDICIÓN
+                queryCliente = @"UPDATE Clientes 
+                        SET Nombre = @Nombre, Apellido = @Apellido, Telefono = @Telefono, [Tipo de membresia] = @Membresia
+                        WHERE ID_Cliente = @IdCliente;";
+            }
+
+            // Consulta para registrar el pago (Solo usado en nuevos registros)
+            string queryPago = @"INSERT INTO Pagos (ID_Cliente, ID_Membresia, Monto_Pagado, Fecha_Pago, Fecha_Inicio, Fecha_Vencimiento, Estado)                     
+                             VALUES (@ID_Cliente, @ID_Membresia, @Monto, @FechaPago, @FechaInicio, @FechaVencimiento, @Estado);";
 
             using (SqlConnection conexion = new SqlConnection(conexionString))
             {
@@ -108,50 +138,67 @@ namespace GymControl
                 {
                     conexion.Open();
 
-                    // --- PASO 1: REGISTRAR AL CLIENTE (CON TODOS LOS CAMPOS OBLIGATORIOS) ---
-                    int nuevoIdCliente = 0;
                     using (SqlCommand cmdCliente = new SqlCommand(queryCliente, conexion))
                     {
                         cmdCliente.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
                         cmdCliente.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
                         cmdCliente.Parameters.AddWithValue("@Telefono", txtTelefono.Text.Trim());
                         cmdCliente.Parameters.AddWithValue("@Membresia", cmbMembresia.Text.Trim());
-                        cmdCliente.Parameters.AddWithValue("@Estado", estadoInicial);
-                        cmdCliente.Parameters.AddWithValue("@FechaInicio", fechaInicio);
-                        cmdCliente.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
 
-                        nuevoIdCliente = Convert.ToInt32(cmdCliente.ExecuteScalar());
+                        if (idClienteAEditar == null)
+                        {
+                            // Lógica para Insertar Nuevo
+                            cmdCliente.Parameters.AddWithValue("@Estado", estadoInicial);
+                            cmdCliente.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                            cmdCliente.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
+
+                            int nuevoIdCliente = Convert.ToInt32(cmdCliente.ExecuteScalar());
+
+                            // Registrar el Pago inicial
+                            using (SqlCommand cmdPago = new SqlCommand(queryPago, conexion))
+                            {
+                                cmdPago.Parameters.AddWithValue("@ID_Cliente", nuevoIdCliente);
+                                cmdPago.Parameters.AddWithValue("@ID_Membresia", idMembresia);
+                                cmdPago.Parameters.AddWithValue("@Monto", montoCalculado);
+                                cmdPago.Parameters.AddWithValue("@FechaPago", DateTime.Now);
+                                cmdPago.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                                cmdPago.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
+                                cmdPago.Parameters.AddWithValue("@Estado", estadoInicial);
+
+                                cmdPago.ExecuteNonQuery();
+                            }
+
+                            MessageBox.Show("¡Socio registrado con éxito!");
+                        }
+                        else
+                        {
+                            // Lógica para Modificar Existente
+                            cmdCliente.Parameters.AddWithValue("@IdCliente", idClienteAEditar.Value);
+                            cmdCliente.ExecuteNonQuery();
+
+                            MessageBox.Show("¡Datos del socio actualizados con éxito!");
+
+                            // Indicamos a Form4 que todo salió bien y cerramos el diálogo
+                            this.DialogResult = DialogResult.OK;
+                            this.Close();
+                        }
                     }
 
-                    // --- PASO 2: REGISTRAR EL PAGO EN LA TABLA PAGOS ---
-                    using (SqlCommand cmdPago = new SqlCommand(queryPago, conexion))
+                    // Limpieza de campos (solo si fue registro nuevo)
+                    if (idClienteAEditar == null)
                     {
-                        cmdPago.Parameters.AddWithValue("@ID_Cliente", nuevoIdCliente);
-                        cmdPago.Parameters.AddWithValue("@ID_Membresia", idMembresia);
-                        cmdPago.Parameters.AddWithValue("@Monto", montoCalculado);
-                        cmdPago.Parameters.AddWithValue("@FechaPago", DateTime.Now);
-                        cmdPago.Parameters.AddWithValue("@FechaInicio", fechaInicio);
-                        cmdPago.Parameters.AddWithValue("@FechaVencimiento", fechaVencimiento);
-                        cmdPago.Parameters.AddWithValue("@Estado", estadoInicial);
-
-                        cmdPago.ExecuteNonQuery(); // Guardamos el pago en la BD
+                        txtNombre.Clear();
+                        txtApellido.Clear();
+                        txtTelefono.Clear();
+                        cmbMembresia.SelectedIndex = -1;
                     }
-
-                    MessageBox.Show("¡Socio registrado y membresía activada con éxito!");
-
-                    // Limpias tus controles para un nuevo registro
-                    txtNombre.Clear();
-                    txtApellido.Clear();
-                    txtTelefono.Clear();
-                    cmbMembresia.SelectedIndex = -1;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ocurrió un error en el registro: " + ex.Message);
+                    MessageBox.Show("Ocurrió un error: " + ex.Message);
                 }
             }
         }
-        
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -185,7 +232,6 @@ namespace GymControl
                         {
                             while (lector.Read())
                             {
-                                // Creamos un objeto Membresia por cada fila encontrada en la base de datos
                                 Membresia m = new Membresia()
                                 {
                                     ID_Membresia = Convert.ToInt32(lector["ID_Membresia"]),
@@ -199,11 +245,14 @@ namespace GymControl
 
                         // Asignamos la lista al ComboBox de tu pantalla
                         cmbMembresia.DataSource = listaMembresias;
-                        cmbMembresia.DisplayMember = "Tipo_Membresia"; // Lo que el usuario va a ver escrito
-                        cmbMembresia.ValueMember = "ID_Membresia";     // El ID real que guardaremos en la tabla Pagos
+                        cmbMembresia.DisplayMember = "Tipo_Membresia";
+                        cmbMembresia.ValueMember = "ID_Membresia";
 
-                        // Inicializar el ComboBox sin ninguna selección por defecto
-                        cmbMembresia.SelectedIndex = -1;
+                        // Inicializar el ComboBox sin ninguna selección por defecto si es nuevo registro
+                        if (idClienteAEditar == null)
+                        {
+                            cmbMembresia.SelectedIndex = -1;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -214,6 +263,6 @@ namespace GymControl
         }
 
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
-        {        }
+        { }
     }
 }
