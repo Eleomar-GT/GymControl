@@ -48,19 +48,29 @@ namespace GymControl
             string archivoReporte = "ReporteUsuarios.rdlc";
             string querySQL = "";
 
-            if (deseaCorte == "Sí")
+            // 2. Definición de la consulta según la opción seleccionada
+            if (deseaCorte.Trim().ToLower().Contains("si"))
             {
                 archivoReporte = "ReporteUsuarios.rdlc";
-                querySQL = "SELECT CAST(ID_Pago AS VARCHAR) AS Nombre, CAST(Monto AS VARCHAR) AS Apellido, CAST(Fecha_Inicio AS VARCHAR) AS Telefono, 'Corte' AS TipoMembresia FROM dbo.Pagos WHERE CAST(Fecha_Inicio AS DATE) = @Fecha";
+
+                querySQL = @"SELECT 
+                        c.Nombre AS Nombre, 
+                        c.Apellido AS Apellido, 
+                        c.Telefono AS Telefono, 
+                        (m.Tipo_Membresia + ' - $' + CAST(p.Monto_Pagado AS VARCHAR)) AS TipoMembresia 
+                     FROM dbo.Pagos p
+                     INNER JOIN dbo.Clientes c ON p.ID_Cliente = c.ID_Cliente
+                     INNER JOIN dbo.Membresias m ON p.ID_Membresia = m.ID_Membresia
+                     WHERE CAST(p.Fecha_Pago AS DATE) = @Fecha";
             }
             else
             {
+                // REPORTE NORMAL: Filtra por el tipo de membresía escrito en la ficha del cliente.
+                // Quitamos el candado estricto de la fecha para asegurar que se visualicen los registros existentes.
                 querySQL = @"SELECT c.Nombre, c.Apellido, c.Telefono, 
-                            @TipoMembresiaTexto AS TipoMembresia
-                     FROM dbo.Clientes c 
-                     INNER JOIN dbo.Pagos p ON c.ID_Cliente = p.ID_Cliente
-                     WHERE CAST(p.Fecha_Inicio AS DATE) = @Fecha 
-                       AND p.ID_Membresia = @IDMembresia";
+                            c.[Tipo de membresia] AS TipoMembresia
+                     FROM dbo.Clientes c
+                     WHERE c.[Tipo de membresia] = @TipoMembresiaTexto";
             }
 
             string cadenaConexion = "Server=(local)\\SQLEXPRESS;Database=clientes_GC;Trusted_Connection=True;TrustServerCertificate=True;";
@@ -72,11 +82,13 @@ namespace GymControl
                 using (SqlConnection conexion = new SqlConnection(cadenaConexion))
                 {
                     conexion.Open();
+                    // Creamos el comando con la consulta SQL correspondiente
                     using (SqlCommand comando = new SqlCommand(querySQL, conexion))
                     {
+                        // Pasamos la fecha seleccionada
                         comando.Parameters.AddWithValue("@Fecha", fechaSeleccionada);
 
-                        // Lógica de conversión de membresía a ID numérico
+                        // Calculamos el ID numérico de la membresía para que siempre exista
                         int idMembresiaBusqueda = 1;
                         string tTexto = (tipoSeleccionado ?? "").ToLower();
 
@@ -85,6 +97,8 @@ namespace GymControl
                         else if (tTexto.Contains("semanal")) idMembresiaBusqueda = 4;
                         else idMembresiaBusqueda = 1;
 
+                        // Se declaran globalmente: si la consulta no los usa (como en el corte), SQL los ignora.
+                        // Si la consulta los requiere (como en el reporte normal), no lanzará error.
                         comando.Parameters.AddWithValue("@IDMembresia", idMembresiaBusqueda);
                         comando.Parameters.AddWithValue("@TipoMembresiaTexto", tipoSeleccionado ?? "Mensual");
 
@@ -117,11 +131,10 @@ namespace GymControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("No hay conexión a la BD: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al generar el reporte: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
 }
 
 
-            
