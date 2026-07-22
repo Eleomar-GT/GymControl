@@ -22,6 +22,7 @@ namespace GymControl
                     form2.ShowDialog();
                 }
                 this.Show();
+
             }
             else
             {

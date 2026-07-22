@@ -104,7 +104,6 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(151, 28);
             comboBox1.TabIndex = 9;
-      
             // 
             // comboBox3
             // 
@@ -163,7 +162,7 @@
             Controls.Add(pictureBox1);
             Name = "Form5";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form5";
+            Text = "Reportes";
             Load += Form5_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);

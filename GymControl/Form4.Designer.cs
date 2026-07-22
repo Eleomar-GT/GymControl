@@ -34,7 +34,6 @@
             pictureBox2 = new PictureBox();
             dgvclientes = new DataGridView();
             button1 = new Button();
-            button2 = new Button();
             btnEditar = new Button();
             btnEliminar = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -94,21 +93,10 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // button2
-            // 
-            button2.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.Location = new Point(503, 366);
-            button2.Name = "button2";
-            button2.Size = new Size(123, 39);
-            button2.TabIndex = 16;
-            button2.Text = "Visualizar";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
-            // 
             // btnEditar
             // 
             btnEditar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEditar.Location = new Point(58, 366);
+            btnEditar.Location = new Point(378, 366);
             btnEditar.Name = "btnEditar";
             btnEditar.Size = new Size(113, 39);
             btnEditar.TabIndex = 17;
@@ -119,7 +107,7 @@
             // btnEliminar
             // 
             btnEliminar.Font = new Font("Imprint MT Shadow", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEliminar.Location = new Point(211, 366);
+            btnEliminar.Location = new Point(511, 366);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(113, 39);
             btnEliminar.TabIndex = 18;
@@ -134,7 +122,6 @@
             ClientSize = new Size(833, 450);
             Controls.Add(btnEliminar);
             Controls.Add(btnEditar);
-            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(dgvclientes);
             Controls.Add(pictureBox2);
@@ -142,7 +129,8 @@
             Controls.Add(pictureBox1);
             Name = "Form4";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form4";
+            Text = "Administracion de socios";
+            Load += Form4_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvclientes).EndInit();
@@ -157,7 +145,6 @@
         private PictureBox pictureBox2;
         private DataGridView dgvclientes;
         private Button button1;
-        private Button button2;
         private Button btnEditar;
         private Button btnEliminar;
     }

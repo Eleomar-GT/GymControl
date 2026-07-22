@@ -44,12 +44,7 @@ namespace GymControl
         //método para mostrar los datos en el datagridview al cargar el formulario
         private void button2_Click(object sender, EventArgs e)
         {
-            // Refrescar el grid automáticamente al regresar
-            Conexion objetConexion = new Conexion();
-            objetConexion.estableceConexion();
-            //mostrar clientes
-            CClientes objetoClientes = new CClientes();
-            objetoClientes.mostrarClientes(dgvclientes);
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -59,7 +54,7 @@ namespace GymControl
         //boton para editar registros
         private void btnEditar_Click(object sender, EventArgs e)
         {
-             //Validar que haya una fila seleccionada
+            //Validar que haya una fila seleccionada
             if (dgvclientes.CurrentRow != null)
             {
                 //Extraer los datos de la fila actual
@@ -118,6 +113,12 @@ namespace GymControl
             {
                 MessageBox.Show("Por favor, selecciona un socio de la lista para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void Form4_Load(object sender, EventArgs e)
+        {
+            CClientes objetoClientes = new CClientes();
+            objetoClientes.mostrarClientes(dgvclientes);
         }
     }
 }

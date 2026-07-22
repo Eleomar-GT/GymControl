@@ -115,7 +115,7 @@ namespace GymControl
 
             if (idClienteAEditar == null)
             {
-                // ES UN REGISTRO NUEVO
+                // se ingresa un nuevo registro
                 queryCliente = @"INSERT INTO Clientes (Nombre, Apellido, Telefono, [Tipo de membresia], Estado, [Fecha de inicio], [Fecha de vencimiento]) 
                         VALUES (@Nombre, @Apellido, @Telefono, @Membresia, @Estado, @FechaInicio, @FechaVencimiento);
                         SELECT SCOPE_IDENTITY();";
@@ -218,7 +218,7 @@ namespace GymControl
         {
             List<Membresia> listaMembresias = new List<Membresia>();
 
-            // Consulta para traer los planes del gimnasio
+            // Consulta para traer los planes de membresias
             string query = "SELECT ID_Membresia, Tipo_Membresia, Precio FROM Membresias;";
 
             using (SqlConnection conexion = new SqlConnection(conexionString))
